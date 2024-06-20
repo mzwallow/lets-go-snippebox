@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/compose-spec/compose-spec/master/schema/compose-spec.json
+services:
+  db:
+    image: mariadb:lts
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: p@ssw0rd
+    ports:
+      - 3306:3306
+    volumes:
+      - ./assets/ddl.sql:/docker-entrypoint-initdb.d/ddl.sql
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
