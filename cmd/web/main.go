@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"database/sql"
 	"flag"
 	"html/template"
@@ -64,10 +65,23 @@ func main() {
 		sessionManager: sessionManager,
 	}
 
+	// Go's HTTPS server is support TLS 1.2 and 1.3 by default.
+	// You can customize min and max version with `tls.Config.MinVersion` and `MaxVersion`
+	//
+	// Restricting cipher suites, using `tls.Config.CipherSuites`
+	//
+	// Important: Restricting the supported cipher suites to only include strong,
+	// modern, ciphers can mean that users with certain older browsers won’t be able to use your website.
+	// See Mozilla's [recommended configurations](https://wiki.mozilla.org/Security/Server_Side_TLS)
+	tlsConfig := &tls.Config{
+		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
+	}
+
 	srv := &http.Server{
-		Addr:     *addr,
-		Handler:  app.routes(),
-		ErrorLog: slog.NewLogLogger(logger.Handler(), slog.LevelError),
+		Addr:      *addr,
+		Handler:   app.routes(),
+		ErrorLog:  slog.NewLogLogger(logger.Handler(), slog.LevelError),
+		TLSConfig: tlsConfig,
 	}
 
 	logger.Info("starting server", "addr", *addr)
