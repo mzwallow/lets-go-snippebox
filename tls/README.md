@@ -8,3 +8,5 @@ $ go run /usr/local/go/src/crypto/tls/generate_cert.go --rsa-bits=2048 --host=lo
 ## The mkcert tool
 As an alternative to the `generate_cert.go` tool [mkcert](https://github.com/FiloSottile/mkcert), it has the advantage that the generated certificates are locally trusted — meaning that you can use them for testing and development without getting security warnings in your web browser.
 
+# NOTE
+This directory should be added to ignore rule in version control system (like Git or Mercurial).
