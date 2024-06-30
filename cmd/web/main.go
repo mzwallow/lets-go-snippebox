@@ -63,11 +63,16 @@ func main() {
 		sessionManager: sessionManager,
 	}
 
+	srv := &http.Server{
+		Addr:    *addr,
+		Handler: app.routes(),
+	}
+
 	logger.Info("starting server", "addr", *addr)
 
 	// If using ":http" or named port, the `http.ListenAndServe()` function will try to lookup revelant
 	// port number from `/etc/services`
-	err = http.ListenAndServe(*addr, app.routes())
+	err = srv.ListenAndServe()
 	logger.Error(err.Error())
 	os.Exit(1)
 }
