@@ -41,4 +41,14 @@ CREATE USER 'web'@'%';
 GRANT SELECT, INSERT, UPDATE, DELETE ON snippetbox.* TO 'web'@'%';
 ALTER USER 'web'@'%' IDENTIFIED BY 'p@ssw0rd';
 
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    hashed_password CHAR(60) NOT NULL,
+    created DATETIME NOT NULL
+);
+
+ALTER TABLE users ADD CONSTRAINT users_uc_email UNIQUE (email);
+
 COMMIT;
