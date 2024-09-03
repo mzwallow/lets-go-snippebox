@@ -1,35 +1,24 @@
 package main
 
 import (
-	"bytes"
 	"io"
+	"log/slog"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
 	"snippetbox.mzwallow.dev/internal/assert"
 )
 
 func TestPing(t *testing.T) {
-	rr := httptest.NewRecorder()
-
-	r, err := http.NewRequest(http.MethodGet, "/", nil)
-	if err != nil {
-		t.Fatal(err)
+	app := &application{
+		logger: slog.New(slog.NewTextHandler(io.Discard, nil)),
 	}
 
-	ping(rr, r)
+	ts := newTestServer(t, app.routes())
+	defer ts.Close()
 
-	rs := rr.Result()
-	defer rs.Body.Close()
+	code, _, body := ts.get(t, "/ping")
 
-	assert.Equal(t, rs.StatusCode, http.StatusOK)
-
-	body, err := io.ReadAll(rs.Body)
-	if err != nil {
-		t.Fatal(err)
-	}
-	body = bytes.TrimSpace(body)
-
+	assert.Equal(t, code, http.StatusOK)
 	assert.Equal(t, string(body), "OK")
 }

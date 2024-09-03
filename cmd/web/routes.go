@@ -13,6 +13,8 @@ func (app *application) routes() http.Handler {
 
 	mux.Handle("GET /static/", http.FileServerFS(ui.Files))
 
+	mux.HandleFunc("GET /ping", ping)
+
 	// Route pattern that ends with trailing slash -- like "/" or "/static/" --
 	// it is known as a 'subtree path pattern', they act like "/**" or "/static/**"
 	//
