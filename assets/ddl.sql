@@ -60,4 +60,9 @@ CREATE TABLE IF NOT EXISTS users (
 
 ALTER TABLE users ADD CONSTRAINT users_uc_email UNIQUE (email);
 
+CREATE DATABASE IF NOT EXISTS test_snippetbox CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'test_web'@'%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON snippetbox.* TO 'test_web'@'%';
+ALTER USER 'test_web'@'%' IDENTIFIED BY 'p@ssw0rd';
+
 COMMIT;
